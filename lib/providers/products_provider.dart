@@ -42,7 +42,7 @@ class ProductsProvider with ChangeNotifier {
     // if (_showFavoritesOnly) {
     //   return _items.where((product) => product.isFavorite).toList();
     // } else {
-      
+
     // }
     return [..._items];
   }
@@ -65,8 +65,29 @@ class ProductsProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void addProduct() {
-    //_items.add(value);
+  void addProduct(Product product) {
+    final newProduct = Product(
+      title: product.title,
+      description: product.description,
+      imageUrl: product.imageUrl,
+      price: product.price,
+      id: DateTime.now().toString(),
+    );
+    _items.add(newProduct);
+    notifyListeners();
+  }
+
+  void updateProduct(String id, Product product) {
+    final productIndex = _items.indexWhere((product) => product.id == id);
+
+    if (productIndex >= 0) {
+      _items[productIndex] = product;
+      notifyListeners();
+    }
+  }
+
+  void deleteProduct(String id) {
+    _items.removeWhere((product) => product.id == id);
     notifyListeners();
   }
 }
