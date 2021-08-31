@@ -19,25 +19,32 @@ class Product with ChangeNotifier {
       @required this.imageUrl,
       this.isFavorite = false});
 
+  void _setFavoriteValue(bool newValue) {
+    isFavorite = newValue;
+    notifyListeners();
+  }
+
   Future<void> toggleFavoriteStatus() async {
     final oldStatus = isFavorite;
     final url = Uri.parse(
-        'https://flutter-shop-app-994c1-default-rtdb.firebaseio.com/products/$id');
+        'https://flutter-shop-app-994c1-default-rtdb.firebaseio.com/products/$id.json');
 
     // Update UI
-    isFavorite = !isFavorite;
-    notifyListeners();
+    _setFavoriteValue(!isFavorite);
 
     try {
-      var await http.patch(
+      var response = await http.patch(
         url,
         body: json.encode({
-          'favorite': isFavorite,
+          'isFavorite': isFavorite,
         }),
       );
+
+      if (response.statusCode >= 400) {
+        _setFavoriteValue(oldStatus);
+      }
     } catch (error) {
-      isFavorite = oldStatus;
-      notifyListeners();
+      _setFavoriteValue(oldStatus);
     }
   }
 }
