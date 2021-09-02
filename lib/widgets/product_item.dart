@@ -22,9 +22,15 @@ class ProductItem extends StatelessWidget {
               arguments: product.id,
             );
           },
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: product.id + '/image',
+            child: FadeInImage(
+              placeholder: AssetImage('assets/images/product-placeholder.png'),
+              image: NetworkImage(
+                product.imageUrl,
+              ),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         footer: GridTileBar(
@@ -32,7 +38,8 @@ class ProductItem extends StatelessWidget {
             builder: (_, product, child) => IconButton(
               icon: Icon(
                   product.isFavorite ? Icons.favorite : Icons.favorite_border),
-              onPressed: () => product.toggleFavoriteStatus(auth.token, auth.userId),
+              onPressed: () =>
+                  product.toggleFavoriteStatus(auth.token, auth.userId),
               color: Theme.of(context).accentColor,
             ),
             child: Text('Never changes'),
